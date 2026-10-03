@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "revision": 1,
+  "codes": {
+    "PLACEHOLDER_PHOTOS": {
+      "label": "Fotos placeholder",
+      "desc": "Paquete de prueba",
+      "effects": [
+        {
+          "action": "unlock_gallery",
+          "target": "asset:placeholder_photo_001"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:placeholder_photo_002"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:placeholder_photo_003"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:placeholder_photo_004"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:placeholder_photo_005"
+        }
+      ]
+    }
+  },
+  "assets": {
+    "placeholder_photo_001": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/placeholder_photo_001.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 135266,
+      "sha256": "9fd1c8d8e62a46e9858d27d399be2ee5e92173e5cdaa7bc9d5fac9d23ed6c370",
+      "requires_code": true,
+      "tier": "free",
+      "pov_ids": [],
+      "tags": [],
+      "label": "Placeholder 1"
+    },
+    "placeholder_photo_002": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/placeholder_photo_002.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 130744,
+      "sha256": "1771febcb8beea945cf6c1ea5d3624995b2cc41c563e394ec6c50563dabcd527",
+      "requires_code": true,
+      "tier": "free",
+      "pov_ids": [],
+      "tags": [],
+      "label": "Placeholder 2"
+    },
+    "placeholder_photo_003": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/placeholder_photo_003.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 147618,
+      "sha256": "c61bb81cd97bed26e0e7541ff4d1a4aa1134e5aac9aac7df9a231f6b2a0c1b32",
+      "requires_code": true,
+      "tier": "free",
+      "pov_ids": [],
+      "tags": [],
+      "label": "Placeholder 3"
+    },
+    "placeholder_photo_004": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/placeholder_photo_004.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 140246,
+      "sha256": "a0d989a72fcf9485bc5bb85c82c57bad2ae78d2e9a97c52900b82d4c33550620",
+      "requires_code": true,
+      "tier": "free",
+      "pov_ids": [],
+      "tags": [],
+      "label": "Placeholder 4"
+    },
+    "placeholder_photo_005": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/placeholder_photo_005.png",
+      "media_type": "image",
+      "ext": "png",
+      "bytes": 1678245,
+      "sha256": "ca55b9d83c221004c2e6800503ee299e4d67ce225d374a988ae11337549aefee",
+      "requires_code": true,
+      "tier": "free",
+      "pov_ids": [],
+      "tags": [],
+      "label": "Placeholder 5"
+    }
+  }
+}
