@@ -1,0 +1,840 @@
+/* ==========================================================================
+   Phone Stories — CSS propio de la página de itch.io
+   --------------------------------------------------------------------------
+   Dónde va:  itch.io → tu página → Edit theme → (sección CSS) → pegar TODO.
+   Qué hace:  le da a la página la estética de la pantalla del juego (fría,
+              casi negra, plana) con la marca como acento, y arregla los
+              detalles que el editor de temas no toca (cards, chips, listas).
+   Reglas que respeta:
+     · Todo cuelga de #wrapper → no toca el chrome de itch.io (header, etc.).
+     · No oculta ni reordena contenido: sólo pinta lo que ya está.
+     · Sin JavaScript y sin fuentes externas (usa la del tema, hoy Lato).
+   Para cambiar la paleta, tocá SÓLO el bloque 1.
+   ========================================================================== */
+
+/* ==== 1. Tokens ========================================================== */
+#wrapper {
+  /* Base "pantalla del juego": fría, casi negra, plana */
+  --ps-bg:        #0d0d0f;
+  --ps-bg-2:      #101014;
+  --ps-surface:   #16161c;
+  --ps-card:      #1e1e26;
+  --ps-card-2:    #262630;
+  --ps-line:      rgba(255, 255, 255, .08);
+  --ps-line-2:    rgba(255, 255, 255, .18);
+
+  /* Texto */
+  --ps-text:      #e7e7ee;
+  --ps-dim:       #a6a6b2;
+  --ps-faint:     #9a9aa6;   /* ≥5.3:1 sobre las tres superficies (AA chico) */
+
+  /* Marca (hex sacados del logo y del banner, no a ojo) */
+  --ps-orange:    #fb922b;   /* placa de la versión */
+  --ps-orange-2:  #ffb45c;   /* hover */
+  --ps-yellow:    #e8c547;   /* placa "My Phone" */
+  --ps-red:       #bb191d;   /* placa "Stories" */
+  --ps-ink:       #140f06;   /* texto SOBRE naranja (contraste, no blanco) */
+
+  --ps-radius:    16px;
+  --ps-radius-sm: 10px;
+  --ps-shadow:    0 20px 50px rgba(0, 0, 0, .55);
+}
+
+/* ==== 2. Variables de itch (para que sus propias reglas sigan el tema) ==== */
+#wrapper {
+  --itchio_bg_color:      var(--ps-bg);
+  --itchio_bg2_color:     var(--ps-surface);
+  --itchio_bg2_sub:       var(--ps-card);
+  --itchio_text_color:    var(--ps-text);
+  --itchio_link_color:    var(--ps-orange);
+  --itchio_border_color:  var(--ps-line);
+  --itchio_button_color:  var(--ps-orange);
+  --itchio_button_fg_color: var(--ps-ink);
+  --itchio_button_shadow_color: transparent;
+  --itchio_white_back:    var(--ps-card);
+  --itchio_gray_back:     var(--ps-card);
+  --itchio_body_color:    var(--ps-text);
+  --itchio_body_color_med: var(--ps-dim);
+  --itchio_body_color_light: var(--ps-faint);
+}
+
+/* ==== 3. Fondo de página + columna ======================================= */
+#wrapper {
+  background-color: var(--ps-bg);
+  background-image:
+    radial-gradient(1100px 520px at 50% -180px, rgba(251, 146, 43, .10), rgba(251, 146, 43, 0) 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' fill-opacity='0.045'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, repeat;
+  background-position: 50% 0, 0 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+#wrapper .inner_column {
+  background-color: var(--ps-surface);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, 0) 240px);
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius);
+  box-shadow: var(--ps-shadow);
+  margin-top: 26px;
+  margin-bottom: 44px;
+  color: var(--ps-text);
+}
+
+/* ==== 4. Banner / encabezado ============================================= */
+/* OJO: el banner reemplaza al título, así que el logo ya viene en la imagen. */
+#wrapper .header.has_image {
+  margin: 0;
+}
+
+#wrapper .header.has_image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Degradé que funde el banner con la columna (que no corte seco) */
+#wrapper .header {
+  position: relative;
+}
+
+#wrapper .header.has_image::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(22, 22, 28, 0), var(--ps-surface));
+  pointer-events: none;
+}
+
+/* ==== 5. Botones ========================================================= */
+#wrapper .button {
+  border: 0;
+  border-radius: var(--ps-radius-sm);
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-shadow: none;
+  box-shadow: none;
+  transition: background-color .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+#wrapper .button:hover {
+  background-color: var(--ps-orange-2);
+  transform: translateY(-1px);
+}
+
+#wrapper .button:active {
+  transform: translateY(0);
+  top: 0;
+}
+
+#wrapper .button.outline {
+  background-color: transparent;
+  border: 1px solid var(--ps-line-2);
+  color: var(--ps-text);
+}
+
+#wrapper .button.outline:hover {
+  background-color: rgba(255, 255, 255, .06);
+  border-color: var(--ps-orange);
+  color: var(--ps-text);
+}
+
+/* CTA principal ("Download Now" del encabezado) */
+#wrapper .view_game_page .direct_download_row .button,
+#wrapper .view_game_page .direct_download_row .direct_download_btn {
+  background-color: var(--ps-orange);
+  color: var(--ps-ink);
+  font-size: 17px;
+  font-weight: 800;
+  height: auto;
+  line-height: 1.2;
+  padding: 13px 26px;
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(251, 146, 43, .26);
+}
+
+#wrapper .view_game_page .direct_download_row .button:hover,
+#wrapper .view_game_page .direct_download_row .direct_download_btn:hover {
+  background-color: var(--ps-orange-2);
+  box-shadow: 0 14px 30px rgba(251, 146, 43, .34);
+}
+
+/* Fila del encabezado: texto + CTA */
+#wrapper .view_game_page .header_buy_row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 20px 4px 20px;
+}
+
+#wrapper .view_game_page .header_buy_row p {
+  margin: 0;
+  color: var(--ps-dim);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ==== 6. Secciones (los h2 que itch genera) ============================== */
+#wrapper .inner_column h2 {
+  position: relative;
+  margin: 36px 0 16px 0;
+  padding: 0 0 10px 15px;
+  border-bottom: 1px solid var(--ps-line);
+  color: var(--ps-text);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+#wrapper .inner_column h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .1em;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--ps-yellow), var(--ps-orange));
+}
+
+/* ==== 7. Descarga (lista de archivos) =================================== */
+#wrapper .view_game_page .uploads .upload_list_widget {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+#wrapper .uploads .upload {
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius-sm);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+#wrapper .uploads .upload:hover {
+  background-color: var(--ps-card-2);
+  border-color: var(--ps-line-2);
+}
+
+#wrapper .uploads .upload .button.download_btn {
+  background-color: var(--ps-orange);
+  color: var(--ps-ink);
+  font-weight: 700;
+  height: auto;
+  line-height: 1.2;
+  padding: 10px 18px;
+  border-radius: 999px;
+}
+
+#wrapper .uploads .upload .info_column {
+  min-width: 0;
+}
+
+#wrapper .uploads .upload .name {
+  color: var(--ps-text);
+  font-weight: 600;
+}
+
+#wrapper .uploads .upload .file_size,
+#wrapper .uploads .upload .upload_date,
+#wrapper .uploads .upload .build_row,
+#wrapper .uploads .upload .min_price {
+  color: var(--ps-faint);
+  font-size: 13px;
+  opacity: 1;
+}
+
+#wrapper .uploads .upload .download_platforms .icon {
+  color: var(--ps-dim);
+  opacity: .9;
+}
+
+/* ==== 8. Descripción ===================================================== */
+#wrapper .formatted_description {
+  color: var(--ps-dim);
+  font-size: 16px;
+  line-height: 1.72;
+}
+
+#wrapper .formatted_description > p:first-child {
+  color: var(--ps-text);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+#wrapper .formatted_description p {
+  margin: 0 0 1.05em 0;
+}
+
+#wrapper .formatted_description strong,
+#wrapper .formatted_description b {
+  color: var(--ps-text);
+}
+
+#wrapper .formatted_description a {
+  color: var(--ps-orange);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(251, 146, 43, .35);
+}
+
+#wrapper .formatted_description a:hover {
+  border-bottom-color: var(--ps-orange);
+}
+
+#wrapper .formatted_description ul,
+#wrapper .formatted_description ol {
+  margin: 0 0 1.2em 0;
+  padding-left: 1.3em;
+  list-style: none;
+}
+
+#wrapper .formatted_description li {
+  position: relative;
+  margin-bottom: .55em;
+}
+
+#wrapper .formatted_description ul li::before {
+  content: "";
+  position: absolute;
+  left: -1.05em;
+  top: .62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ps-yellow);
+}
+
+#wrapper .formatted_description h2 {
+  margin: 34px 0 14px 0;
+  padding: 0 0 10px 15px;
+}
+
+/* Imágenes de la descripción.
+   OJO: hoy las 4 imágenes del final del texto son los pills promocionales
+   (AVAILABLE IN / FOLLOW DEVELOPMENT / FOLLOW ON X / SUBSCRIBE TO PATREON).
+   Vienen con el MISMO alto (~95-107 px) pero anchos distintos
+   (399 / 558 / 578 / 632 px): se dejan en su tamaño natural, centradas.
+   Estirarlas al 100% empareja el ancho pero deforma el pill de X (399 → 553 px
+   de ancho = +39% y 148 px de alto). Si los re-exportás todos al mismo ancho,
+   esta regla los deja perfectos sin tocar nada. Para arte de verdad (una
+   ilustración), sumale la clase `custom-shot` y ahí va marco + sombra. */
+#wrapper .formatted_description img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 12px auto;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+#wrapper .formatted_description img.custom-shot {
+  border: 1px solid var(--ps-line);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+}
+
+#wrapper .formatted_description figure {
+  margin: 18px 0;
+}
+
+/* Capturas de la columna derecha: enmarcadas, como las miniaturas del juego */
+#wrapper .view_game_page .screenshot_list img {
+  border: 1px solid var(--ps-line);
+  border-radius: 12px;
+}
+
+#wrapper .formatted_description hr {
+  height: 1px;
+  margin: 30px 0;
+  background-color: var(--ps-line);
+  border: 0;
+}
+
+/* Aviso: si el pecho del texto se reordena con clases custom-*, ver README. */
+
+/* ==== 9. Info panel (ficha técnica) + botón "More information" =========== */
+#wrapper .view_game_page .more_information_toggle .toggle_row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: 999px;
+  color: var(--ps-dim);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: border-color .15s ease, color .15s ease;
+}
+
+#wrapper .view_game_page .more_information_toggle .toggle_row a:hover {
+  border-color: var(--ps-orange);
+  color: var(--ps-text);
+}
+
+#wrapper .view_game_page .more_information_toggle .svgicon {
+  fill: currentColor;
+  stroke: currentColor;
+  opacity: .8;
+}
+
+#wrapper .view_game_page .game_info_panel_widget {
+  padding: 14px 16px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius-sm);
+}
+
+#wrapper .game_info_panel_widget table {
+  width: 100%;
+  border: 0;
+}
+
+#wrapper .game_info_panel_widget td {
+  padding: 6px 4px;
+  vertical-align: top;
+  border: 0;
+  color: var(--ps-text);
+  font-size: 14px;
+}
+
+#wrapper .game_info_panel_widget td:first-child {
+  min-width: 128px;
+  color: var(--ps-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  text-align: left;
+  opacity: 1;
+}
+
+/* Todos los links de la ficha son tags/categorías → van como chips */
+#wrapper .game_info_panel_widget td a {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 3px 11px;
+  background-color: var(--ps-card-2);
+  border: 1px solid var(--ps-line);
+  border-radius: 999px;
+  color: var(--ps-text);
+  font-size: 13px;
+  text-decoration: none;
+  transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+}
+
+#wrapper .game_info_panel_widget td a:hover {
+  background-color: rgba(251, 146, 43, .14);
+  border-color: var(--ps-orange);
+  color: var(--ps-orange-2);
+}
+
+#wrapper .game_info_panel_widget .aggregate_rating .star {
+  color: var(--ps-yellow);
+}
+
+#wrapper .game_info_panel_widget .rating_count {
+  color: var(--ps-faint);
+}
+
+/* ==== 10. Devlog ========================================================= */
+#wrapper .game_devlog ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#wrapper .game_devlog li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--ps-line);
+}
+
+#wrapper .game_devlog li:last-child {
+  border-bottom: 0;
+}
+
+#wrapper .game_devlog li > a {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 12px;
+  color: var(--ps-text);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--ps-radius-sm);
+  transition: background-color .15s ease, color .15s ease;
+}
+
+#wrapper .game_devlog li > a:hover {
+  background-color: var(--ps-card);
+  color: var(--ps-orange-2);
+}
+
+#wrapper .game_devlog .post_date {
+  flex: none;
+  color: var(--ps-dim);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+#wrapper .game_devlog .post_date .icon {
+  opacity: .7;
+}
+
+/* ==== 11. Comentarios (burbujas, como el chat del juego) ================= */
+#wrapper .community_post_list_widget .community_post {
+  padding: 14px 16px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: 14px;
+}
+
+#wrapper .community_post_list_widget .community_post .post_avatar {
+  border-radius: 50%;
+}
+
+#wrapper .community_post_list_widget .community_post .post_header,
+#wrapper .community_post_list_widget .community_post .post_date,
+#wrapper .community_post_list_widget .community_post .post_header a {
+  color: var(--ps-faint);
+}
+
+#wrapper .community_post_list_widget .community_post .post_author a {
+  color: var(--ps-orange);
+}
+
+#wrapper .community_post_list_widget .community_post .post_body {
+  color: var(--ps-text);
+}
+
+#wrapper .community_post_list_widget .community_post .post_votes {
+  background-color: var(--ps-bg-2);
+  border: 1px solid var(--ps-line);
+  border-radius: 8px;
+}
+
+#wrapper .community_post_list_widget .community_post .post_votes a,
+#wrapper .community_post_list_widget .community_post .post_votes button {
+  color: var(--ps-dim);
+}
+
+#wrapper .community_post_list_widget .community_post .post_votes .vote_btn.voted,
+#wrapper .community_post_list_widget .community_post .post_votes .vote_btn:hover {
+  color: var(--ps-orange);
+}
+
+#wrapper .community_post_list_widget .community_post .post_footer .vote_btn {
+  background-color: transparent;
+  border: 1px solid var(--ps-line);
+  border-radius: 999px;
+  color: var(--ps-dim);
+}
+
+#wrapper .community_post_list_widget .community_post .post_footer .vote_btn:hover,
+#wrapper .community_post_list_widget .community_post .post_footer .vote_btn.voted {
+  background-color: rgba(251, 146, 43, .16);
+  border-color: var(--ps-orange);
+  color: var(--ps-orange-2);
+}
+
+#wrapper .game_comments_widget .form_placeholder {
+  padding: 14px 16px;
+  background-color: var(--ps-card);
+  border: 1px dashed var(--ps-line-2);
+  border-radius: var(--ps-radius-sm);
+  color: var(--ps-dim);
+}
+
+/* ==== 12. Barra de edad (el gate de contenido adulto) ==================== */
+#wrapper .content_warning_widget {
+  background-color: var(--ps-bg);
+  background-image: radial-gradient(900px 480px at 50% -120px, rgba(251, 146, 43, .12), rgba(251, 146, 43, 0) 70%);
+  color: var(--ps-text);
+}
+
+#wrapper .content_warning_widget .content_warning_inner {
+  padding: 26px 24px;
+  background-color: var(--ps-surface);
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius);
+  box-shadow: var(--ps-shadow);
+}
+
+#wrapper .content_warning_widget h2 {
+  margin-top: 0;
+  color: var(--ps-text);
+  text-align: center;
+}
+
+#wrapper .content_warning_widget p,
+#wrapper .content_warning_widget em {
+  color: var(--ps-dim);
+}
+
+#wrapper .content_warning_widget select {
+  padding: 8px 10px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: 8px;
+  color: var(--ps-text);
+  font-size: 14px;
+}
+
+#wrapper .content_warning_widget .check_row {
+  color: var(--ps-dim);
+  font-size: 14px;
+}
+
+#wrapper .content_warning_widget .button {
+  background-color: var(--ps-orange);
+  color: var(--ps-ink);
+  font-weight: 800;
+  height: auto;
+  line-height: 1.2;
+  padding: 11px 24px;
+  border-radius: 999px;
+}
+
+/* ==== 13. Pie ============================================================ */
+#wrapper .inner_column .footer {
+  margin-top: 36px;
+  padding: 16px 20px;
+  background-color: rgba(255, 255, 255, .02);
+  border-top: 1px solid var(--ps-line);
+  color: var(--ps-faint);
+  font-size: 14px;
+}
+
+#wrapper .inner_column .footer a {
+  color: var(--ps-dim);
+  text-decoration: none;
+}
+
+#wrapper .inner_column .footer a:hover {
+  color: var(--ps-orange);
+}
+
+#wrapper .inner_column .footer .update_timestamp {
+  opacity: .85;
+}
+
+/* ==== 14. Utilidades custom (opcionales, ver README) ===================== */
+/* Si armás la lista de features con HTML propio en la descripción, usá estas
+   clases: los nombres NO-custom los borra el sanitizador de itch. */
+#wrapper .formatted_description .custom-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 0 0 1.4em 0;
+}
+
+#wrapper .formatted_description .custom-feature {
+  padding: 12px 14px 12px 40px;
+  position: relative;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius-sm);
+  color: var(--ps-dim);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+#wrapper .formatted_description .custom-feature > b,
+#wrapper .formatted_description .custom-feature > strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ps-text);
+}
+
+#wrapper .formatted_description .custom-feature::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 17px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--ps-yellow), var(--ps-orange));
+  box-shadow: 0 0 0 3px rgba(251, 146, 43, .12);
+}
+
+#wrapper .formatted_description .custom-note {
+  margin: 0 0 1.4em 0;
+  padding: 12px 14px;
+  background-color: rgba(251, 146, 43, .10);
+  border-left: 3px solid var(--ps-orange);
+  border-radius: 0 var(--ps-radius-sm) var(--ps-radius-sm) 0;
+  color: var(--ps-dim);
+  font-size: 15px;
+}
+
+#wrapper .formatted_description .custom-note b,
+#wrapper .formatted_description .custom-note strong {
+  color: var(--ps-text);
+}
+
+/* Fila de plataformas (texto, no imagen) */
+#wrapper .formatted_description .custom-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 18px 0;
+  color: var(--ps-faint);
+  font-size: 14px;
+}
+
+#wrapper .formatted_description .custom-platforms > b {
+  color: var(--ps-dim);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+#wrapper .formatted_description .custom-platforms > span {
+  padding: 4px 12px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: 999px;
+  color: var(--ps-text);
+  font-size: 13px;
+}
+
+/* Pila de CTA reales (reemplazan a los 4 PNG promocionales).
+   El texto vive en el HTML, así que traduce y no se pixela. */
+#wrapper .formatted_description .custom-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 6px 0;
+}
+
+#wrapper .formatted_description .custom-cta > a {
+  flex: 1 1 150px;
+  padding: 12px 18px;
+  background-color: var(--ps-card);
+  border: 1px solid var(--ps-line);
+  border-radius: 999px;
+  color: var(--ps-text);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+#wrapper .formatted_description .custom-cta > a:hover {
+  background-color: var(--ps-card-2);
+  border-color: var(--ps-orange);
+  color: var(--ps-orange-2);
+}
+
+#wrapper .formatted_description .custom-cta > a.custom-cta-primary {
+  background-color: rgba(251, 146, 43, .14);
+  border-color: var(--ps-orange);
+  color: var(--ps-orange-2);
+}
+
+#wrapper .formatted_description .custom-cta > a.custom-cta-primary:hover {
+  background-color: rgba(251, 146, 43, .24);
+  color: var(--ps-text);
+}
+
+/* ==== 15. Mobile, foco y movimiento reducido ============================= */
+@media (max-width: 760px) {
+  #wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  #wrapper .inner_column {
+    margin-top: 14px;
+    margin-bottom: 26px;
+    border-radius: 14px;
+  }
+
+  #wrapper .view_game_page .header_buy_row {
+    margin-left: 14px;
+    margin-right: 14px;
+    gap: 10px;
+  }
+
+  #wrapper .view_game_page .header_buy_row p {
+    font-size: 14px;
+  }
+
+  #wrapper .view_game_page .direct_download_row .button {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+
+  #wrapper .inner_column h2 {
+    margin-top: 28px;
+    font-size: 14px;
+  }
+
+  #wrapper .uploads .upload,
+  #wrapper .view_game_page .uploads .upload_list_widget {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  #wrapper .uploads .upload {
+    gap: 10px;
+  }
+
+  #wrapper .game_info_panel_widget td:first-child {
+    min-width: 0;
+    padding-right: 10px;
+  }
+
+  #wrapper .game_info_panel_widget td a {
+    font-size: 12px;
+    padding: 3px 9px;
+  }
+
+  /* Tira de capturas en mobile: es un carrusel horizontal de itch; le damos
+     aire entre imágenes y puntos de anclaje para que se note que se desliza. */
+  #wrapper .view_game_page .screenshot_list {
+    scroll-snap-type: x proximity;
+    padding: 0 12px 6px 12px;
+  }
+
+  #wrapper .view_game_page .screenshot_list img {
+    margin: 0 5px;
+    scroll-snap-align: center;
+  }
+}
+
+/* Foco visible y consistente (accesibilidad: no se saca nunca) */
+#wrapper a:focus-visible,
+#wrapper button:focus-visible,
+#wrapper select:focus-visible,
+#wrapper summary:focus-visible {
+  outline: 2px solid var(--ps-orange-2);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #wrapper *,
+  #wrapper *::before,
+  #wrapper *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
