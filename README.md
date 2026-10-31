@@ -1,7 +1,7 @@
 # phone-stories-meta — versión remota del juego
 
 > Repo público que alimenta el **update checker in-game** de Phone Stories.
-> Clon local: `~/Proyectos/Godot/phone-stories-meta` (SSH alias github-work).
+> Clon local: `~/Proyectos/PhoneStories/Herramientas/phone-stories-meta` (SSH alias github-work).
 > El juego lee: `https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/version`
 
 ## Flujo estándar (el agente maneja esto, no Alex)
