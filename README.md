@@ -42,3 +42,56 @@ Y aparte: Alex actualiza `application/config/version` en el juego antes de compi
 | patreon_notes | Changelog/motivación early access (EN) |
 
 Spec completa del checker: `mobile/docs/SPEC_update_checker.md` (repo del juego).
+
+---
+
+# overrides.json — parches remotos sin build
+
+> El juego lo baja al arrancar, del mismo host que `version`. Sirve para arreglar
+> cosas que ya están en la calle sin sacar una versión nueva.
+> **El cliente vive en el repo del juego** (`override_system.gd`); acá vive sólo el archivo.
+
+## Contrato
+
+```json
+{
+  "schema": 1,
+  "revision": 2,
+  "game_version": "0.6.0",
+  "disabled": false,
+  "flags": [ { "action": "unlock_forum_board", "target": "nsfw" } ],
+  "raw_flags": { "forum_board_unlocked:nsfw": true },
+  "inserts": [ { "id": "ov_001", "pov": "alice", "chat": "alice", "capsule": "cap6",
+                 "before": "n_121", "action": "unlock_forum_board", "target": "nsfw" } ]
+}
+```
+
+| campo | qué hace |
+|---|---|
+| `schema` | siempre `1`. Si el cliente no lo entiende, descarta el archivo entero. |
+| `revision` | subilo en cada cambio. Sirve para cachear y para auditar qué se aplicó. |
+| `game_version` | versión EXACTA para la que se escribió. Si no coincide, no se aplica nada. |
+| `disabled` | `true` apaga todo sin borrar el archivo. Es el kill switch. |
+| `flags` | efectos que se aplican al arrancar. `action`/`target` del vocabulario del juego. |
+| `raw_flags` | escape hatch para variables sin efecto asociado. Prefijo validado. |
+| `inserts` | mete UN nodo efecto entre dos nodos existentes. No reemplaza cápsulas ni edita texto. |
+
+## Invariantes del cliente (no negociables)
+
+1. **Version pin**: `game_version` distinto → no se aplica nada.
+2. **Todo o nada**: se valida el archivo completo antes de tocar el juego. Nunca aplicación parcial.
+3. **Idempotente**: un insert cuyo `id` ya existe se saltea.
+4. **Silencioso**: 404, timeout o JSON roto → el juego arranca normal, sin cartel.
+5. **Log**: se registra en consola y en `user://` qué se aplicó, con ids.
+
+## Antes de pushear
+
+```bash
+cd ~/Proyectos/PhoneStories/Herramientas/phone-stories-meta
+python3 tools/validate_overrides.py --game ~/Proyectos/PhoneStories/Juegos/MyPhoneStories
+```
+
+Verifica que cada `action` exista, que cada `target` esté en la data, que la cápsula y
+el nodo `before` existan, y que el id insertado no choque. Sale con 1 si hay errores.
+Además **avisa si el override no hace nada** (ej: destrabar un board que ya viene
+abierto) — así no se repite el caso del board de Rae, donde el "fix" era decorativo.
