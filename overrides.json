@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "revision": 1,
+  "revision": 2,
   "game_version": "0.6.0",
   "disabled": false,
   "flags": [],
-  "raw_flags": {},
+  "raw_flags": [],
   "inserts": []
 }

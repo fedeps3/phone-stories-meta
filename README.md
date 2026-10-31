@@ -59,8 +59,8 @@ Spec completa del checker: `mobile/docs/SPEC_update_checker.md` (repo del juego)
   "revision": 2,
   "game_version": "0.6.0",
   "disabled": false,
-  "flags": [ { "action": "unlock_forum_board", "target": "nsfw" } ],
-  "raw_flags": { "forum_board_unlocked:nsfw": true },
+  "flags": [ { "pov": "alice", "action": "unlock_forum_board", "target": "nsfw" } ],
+  "raw_flags": [ { "pov": "alice", "flag": "forum_board_unlocked:nsfw", "value": true } ],
   "inserts": [ { "id": "ov_001", "pov": "alice", "chat": "alice", "capsule": "cap6",
                  "at": "entry", "action": "unlock_forum_board", "target": "nsfw" } ]
 }
@@ -72,8 +72,8 @@ Spec completa del checker: `mobile/docs/SPEC_update_checker.md` (repo del juego)
 | `revision` | subilo en cada cambio. Sirve para cachear y para auditar qué se aplicó. |
 | `game_version` | versión EXACTA para la que se escribió. Si no coincide, no se aplica nada. |
 | `disabled` | `true` apaga todo sin borrar el archivo. Es el kill switch. |
-| `flags` | efectos que se aplican al arrancar. `action`/`target` del vocabulario del juego. |
-| `raw_flags` | escape hatch para variables sin efecto asociado. Prefijo validado. |
+| `flags` | efectos a aplicar. Cada entrada lleva `pov` obligatorio: las variables se guardan por protagonista y los ids de board se repiten entre POVs (`nsfw` existe en alice, rae y cherry). |
+| `raw_flags` | escape hatch para variables sin efecto asociado. Lista de `{pov, flag, value}` — un dict no puede llevar `pov`. Prefijo validado contra `PROGRESSION_PREFIXES`. |
 | `inserts` | mete UN nodo efecto. Anclaje: `"at": "entry"` (queda primero) o `"after": "<id>"` (sólo si ese nodo tiene un `sigue` simple). Nada de `before`: recablear varios predecesores cambia el flujo en lugares que nadie miró. |
 
 ## Acciones permitidas
@@ -86,9 +86,20 @@ queda afuera a propósito**: la ejecuta `code_manager.gd` (camino de los código
 dispatcher de diálogo, y sumarla obligaría a un segundo camino de aplicación en el cliente.
 Se puede agregar más adelante sin romper nada, porque el archivo está pineado a `game_version`.
 
+## Cuándo se aplican
+
+`set_variable` no hace nada si no hay protagonista activo (`game_state.gd:427`), así que
+**no se puede aplicar "al arrancar"**. Cada entrada se aplica cuando su `pov` es el
+protagonista activo, y se re-aplica cada vez que se vuelve a ese POV. Nunca toca otro POV.
+
+Los `flags` pasan por el handler real (el mismo que los efectos del juego), así que quedan
+escritos en el save y `disabled: true` sólo frena las aplicaciones siguientes — no deshace
+lo ya escrito. Sólo `raw_flags` es overlay de lectura y se apaga de verdad.
+
 ## Invariantes del cliente (no negociables)
 
-1. **Version pin**: `game_version` distinto → no se aplica nada.
+1. **Version pin**: `game_version` distinto → no se aplica nada. Es también lo que permite
+   agregar acciones nuevas más adelante sin romper builds viejos.
 2. **Todo o nada**: se valida el archivo completo antes de tocar el juego. Nunca aplicación parcial.
 3. **Idempotente**: un insert cuyo `id` ya existe se saltea.
 4. **Silencioso**: 404, timeout o JSON roto → el juego arranca normal, sin cartel.

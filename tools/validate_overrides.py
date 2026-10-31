@@ -31,11 +31,20 @@ ACTIONS = {
     "unlock_forum_board", "unlock_forum", "unlock_social",
     "unlock_social_story", "unlock_social_post", "unlock_app",
 }
-# Prefijos válidos para raw_flags (escape hatch): set_variable("<prefijo>:<valor>")
+# Prefijos válidos para raw_flags: exactamente PROGRESSION_PREFIXES de
+# game_state.gd:54 (sin el ':' final). Quedan afuera a propósito:
+#   - forum_following (no usa la forma "prefijo:valor")
+#   - gallery_* (van por la ruta persistente de galería, no por variables)
+#   - expired, phone_was_unlocked, portal_start_node (no son progresión)
 FLAG_PREFIXES = {
-    "app_unlocked", "dialogue_unlocked", "email_read", "email_replied",
-    "email_saved", "email_unlocked", "forum_board_unlocked", "forum_unlocked",
-    "gallery_collected", "gallery_viewed", "relation_unlocked", "expired",
+    "email_unlocked", "email_replied", "email_read", "email_saved",
+    "app_unlocked", "dialogue_unlocked",
+    "social_unlocked", "social_post_unlocked", "social_story_unlocked",
+    "social_replied", "social_override",
+    "forum_unlocked", "forum_board_unlocked", "forum_post_notified",
+    "forum_link_clicked", "forum_replied",
+    "spy_unlocked", "spy_archived", "relation_unlocked", "relation_bar_defs",
+    "vn_watched", "timeline", "echado", "bloqueado",
 }
 
 errores, avisos = [], []
@@ -72,6 +81,9 @@ class Game:
                 self.assets = set(items.keys())
             else:
                 self.assets = {a.get("id") for a in items if isinstance(a, dict)}
+
+    def has_pov(self, pov):
+        return bool(pov) and os.path.isdir(self.pov_dir(pov))
 
     def pov_dir(self, pov):
         return os.path.join(self.root, "data", self.tier, "stories", pov)
@@ -185,24 +197,36 @@ def main():
 
     flags = d.get("flags", [])
     if not isinstance(flags, list):
-        err("flags debe ser una lista de {action, target}")
+        err("flags debe ser una lista de {pov, action, target}")
         flags = []
     for i, f in enumerate(flags):
         if not isinstance(f, dict) or "action" not in f or "target" not in f:
-            err(f"flags[{i}]: se espera {{action, target}}")
+            err(f"flags[{i}]: se espera {{pov, action, target}}")
             continue
-        check_action(f["action"], f["target"], f"flags[{i}]", game, d.get("pov", "alice"))
+        pov = f.get("pov")
+        if not pov:
+            err(f"flags[{i}]: falta 'pov' (las variables se guardan por protagonista)")
+            continue
+        if not game.has_pov(pov):
+            err(f"flags[{i}]: el POV '{pov}' no existe en la data")
+            continue
+        check_action(f["action"], f["target"], f"flags[{i}]", game, pov)
 
-    raw = d.get("raw_flags", {})
-    if raw and not isinstance(raw, dict):
-        err("raw_flags debe ser un objeto {flag: bool}")
-        raw = {}
-    for k, v in (raw or {}).items():
-        pre = k.split(":", 1)[0]
+    raw = d.get("raw_flags", [])
+    if raw and not isinstance(raw, list):
+        err("raw_flags debe ser una lista de {pov, flag, value} (un dict no puede llevar pov)")
+        raw = []
+    for i, r in enumerate(raw):
+        if not isinstance(r, dict) or "flag" not in r or "pov" not in r:
+            err(f"raw_flags[{i}]: se espera {{pov, flag, value}}")
+            continue
+        if not game.has_pov(r["pov"]):
+            err(f"raw_flags[{i}]: el POV '{r['pov']}' no existe en la data")
+        pre = str(r["flag"]).split(":", 1)[0]
         if pre not in FLAG_PREFIXES:
-            err(f"raw_flags: prefijo '{pre}' desconocido (válidos: {', '.join(sorted(FLAG_PREFIXES))})")
-        if not isinstance(v, bool):
-            err(f"raw_flags['{k}'] debe ser true/false")
+            err(f"raw_flags[{i}]: prefijo '{pre}' desconocido. Válidos: {', '.join(sorted(FLAG_PREFIXES))}")
+        if not isinstance(r.get("value"), bool):
+            err(f"raw_flags[{i}]: 'value' debe ser true/false")
 
     inserts = d.get("inserts", [])
     if not isinstance(inserts, list):
