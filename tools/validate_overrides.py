@@ -23,10 +23,13 @@ import json
 import os
 import sys
 
-# Vocabulario real: eventos de efecto usados en la data del juego.
+# Vocabulario permitido en overrides: los eventos que DialogueManager._apply_effects
+# resuelve vía trigger_event. unlock_gallery queda AFUERA a propósito: lo ejecuta
+# code_manager.gd (camino de los códigos), no el dispatcher de diálogo, y sumarlo
+# obligaría a un segundo camino de aplicación en el cliente.
 ACTIONS = {
     "unlock_forum_board", "unlock_forum", "unlock_social",
-    "unlock_social_story", "unlock_social_post", "unlock_app", "unlock_gallery",
+    "unlock_social_story", "unlock_social_post", "unlock_app",
 }
 # Prefijos válidos para raw_flags (escape hatch): set_variable("<prefijo>:<valor>")
 FLAG_PREFIXES = {
@@ -144,9 +147,6 @@ def check_action(a, t, where, game, pov):
     elif a == "unlock_app":
         if t not in game.apps:
             err(f"{where}: la app '{t}' no existe en home_apps.json")
-    elif a == "unlock_gallery":
-        if t not in game.assets:
-            err(f"{where}: el asset '{t}' no está en asset_manifest.json")
     else:
         if t not in game.id_index(pov):
             warn(f"{where}: no encontré '{t}' en la data del POV '{pov}' (no pude verificar: {a})")
@@ -211,10 +211,19 @@ def main():
     ids = set()
     for i, ins in enumerate(inserts):
         where = f"inserts[{i}]"
-        for k in ("id", "pov", "chat", "capsule", "before", "action", "target"):
+        if "before" in ins:
+            err(f"{where}: 'before' está obsoleto; usá \"at\": \"entry\" o \"after\": \"<id>\"")
+        for k in ("id", "pov", "chat", "capsule"):
             if k not in ins:
                 err(f"{where}: falta '{k}'")
-        if not all(k in ins for k in ("id", "pov", "chat", "capsule", "before")):
+        anchor = "at" if "at" in ins else ("after" if "after" in ins else None)
+        if anchor is None:
+            err(f"{where}: falta \"at\": \"entry\" o \"after\": \"<id>\"")
+        elif "at" in ins and "after" in ins:
+            err(f"{where}: 'at' y 'after' son excluyentes")
+        elif anchor == "at" and ins.get("at") != "entry":
+            err(f"{where}: 'at' sólo acepta \"entry\"")
+        if not all(k in ins for k in ("id", "pov", "chat", "capsule")) or anchor is None:
             continue
         if ins["id"] in ids:
             err(f"{where}: id '{ins['id']}' repetido")
@@ -224,9 +233,19 @@ def main():
             err(f"{where}: no existe la cápsula {ins['pov']}/{ins['chat']}/{ins['capsule']}")
             continue
         cap = load(path)
-        nodos = {n.get("id") for n in cap.get("nodos", [])}
-        if ins["before"] not in nodos:
-            err(f"{where}: el nodo '{ins['before']}' no existe en {ins['capsule']}")
+        lista = cap.get("nodos", [])
+        nodos = {n.get("id") for n in lista}
+        if anchor == "after":
+            ref = ins.get("after")
+            if ref not in nodos:
+                err(f"{where}: el nodo '{ref}' no existe en {ins['capsule']}")
+            else:
+                n = next(x for x in lista if x.get("id") == ref)
+                if not n.get("sigue"):
+                    err(f"{where}: '{ref}' no tiene 'sigue' simple (es end o usa opciones/casos/sino)")
+                for k in ("opciones", "casos", "sino"):
+                    if n.get(k):
+                        err(f"{where}: '{ref}' tiene '{k}'; insertar después cambiaría más de una arista")
         if ins["id"] in nodos:
             err(f"{where}: el id '{ins['id']}' ya existe en {ins['capsule']}")
         if "action" in ins:

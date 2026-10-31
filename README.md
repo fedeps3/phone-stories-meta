@@ -62,7 +62,7 @@ Spec completa del checker: `mobile/docs/SPEC_update_checker.md` (repo del juego)
   "flags": [ { "action": "unlock_forum_board", "target": "nsfw" } ],
   "raw_flags": { "forum_board_unlocked:nsfw": true },
   "inserts": [ { "id": "ov_001", "pov": "alice", "chat": "alice", "capsule": "cap6",
-                 "before": "n_121", "action": "unlock_forum_board", "target": "nsfw" } ]
+                 "at": "entry", "action": "unlock_forum_board", "target": "nsfw" } ]
 }
 ```
 
@@ -74,7 +74,17 @@ Spec completa del checker: `mobile/docs/SPEC_update_checker.md` (repo del juego)
 | `disabled` | `true` apaga todo sin borrar el archivo. Es el kill switch. |
 | `flags` | efectos que se aplican al arrancar. `action`/`target` del vocabulario del juego. |
 | `raw_flags` | escape hatch para variables sin efecto asociado. Prefijo validado. |
-| `inserts` | mete UN nodo efecto entre dos nodos existentes. No reemplaza cápsulas ni edita texto. |
+| `inserts` | mete UN nodo efecto. Anclaje: `"at": "entry"` (queda primero) o `"after": "<id>"` (sólo si ese nodo tiene un `sigue` simple). Nada de `before`: recablear varios predecesores cambia el flujo en lugares que nadie miró. |
+
+## Acciones permitidas
+
+`unlock_forum_board`, `unlock_forum`, `unlock_social`, `unlock_social_story`,
+`unlock_social_post`, `unlock_app`.
+
+Todas las resuelve `DialogueManager._apply_effects` vía `trigger_event`. **`unlock_gallery`
+queda afuera a propósito**: la ejecuta `code_manager.gd` (camino de los códigos), no el
+dispatcher de diálogo, y sumarla obligaría a un segundo camino de aplicación en el cliente.
+Se puede agregar más adelante sin romper nada, porque el archivo está pineado a `game_version`.
 
 ## Invariantes del cliente (no negociables)
 
