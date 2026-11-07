@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": 1,
+  "revision": 2,
   "codes": {
     "PLACEHOLDER_PHOTOS": {
       "label": "Fotos placeholder",
@@ -25,6 +25,28 @@
         {
           "action": "unlock_gallery",
           "target": "asset:placeholder_photo_005"
+        }
+      ]
+    },
+    "CONTENDERS": {
+      "label": "Contenders",
+      "desc": "Una foto de cada candidata, la noche antes del poll.",
+      "effects": [
+        {
+          "action": "unlock_gallery",
+          "target": "asset:drop07_jolene"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:drop07_aria"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:drop07_corinne"
+        },
+        {
+          "action": "unlock_gallery",
+          "target": "asset:drop07_eden"
         }
       ]
     }
@@ -89,6 +111,70 @@
       "pov_ids": [],
       "tags": [],
       "label": "Placeholder 5"
+    },
+    "drop07_jolene": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_jolene.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 69618,
+      "sha256": "3084d157b04fb5896de89a69bfd00bca56ba4d3cdc7f28b88b45f1c740d93a82",
+      "requires_code": true,
+      "tier": "premium",
+      "pov_ids": [
+        "jolene"
+      ],
+      "tags": [
+        "drop07"
+      ],
+      "label": "Drop07 Jolene"
+    },
+    "drop07_aria": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_aria.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 96238,
+      "sha256": "1d1dfec061a2c815227ae82f60618ea90aeda2baac41a6af909c33969420487a",
+      "requires_code": true,
+      "tier": "premium",
+      "pov_ids": [
+        "aria"
+      ],
+      "tags": [
+        "drop07"
+      ],
+      "label": "Drop07 Aria"
+    },
+    "drop07_corinne": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_corinne.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 90018,
+      "sha256": "29a24107544f600fd74be4acfaa1b1baaba28d394c3cefdb8519254573f21da6",
+      "requires_code": true,
+      "tier": "premium",
+      "pov_ids": [
+        "corinne"
+      ],
+      "tags": [
+        "drop07"
+      ],
+      "label": "Drop07 Corinne"
+    },
+    "drop07_eden": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_eden.webp",
+      "media_type": "image",
+      "ext": "webp",
+      "bytes": 72416,
+      "sha256": "941f1df3cc6507b8d83c3fc24c7992f1e2ff60c8845c3f4fb7059b76c87b96cb",
+      "requires_code": true,
+      "tier": "premium",
+      "pov_ids": [
+        "eden"
+      ],
+      "tags": [
+        "drop07"
+      ],
+      "label": "Drop07 Eden"
     }
   }
 }
