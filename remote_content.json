@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": 3,
+  "revision": 4,
   "codes": {
     "PLACEHOLDER_PHOTOS": {
       "label": "Fotos placeholder",
@@ -34,19 +34,19 @@
       "effects": [
         {
           "action": "unlock_gallery",
-          "target": "asset:drop07_jolene"
+          "target": "asset:contenders_jolene"
         },
         {
           "action": "unlock_gallery",
-          "target": "asset:drop07_aria"
+          "target": "asset:contenders_aria"
         },
         {
           "action": "unlock_gallery",
-          "target": "asset:drop07_corinne"
+          "target": "asset:contenders_corinne"
         },
         {
           "action": "unlock_gallery",
-          "target": "asset:drop07_eden_b"
+          "target": "asset:contenders_eden"
         }
       ]
     }
@@ -112,8 +112,8 @@
       "tags": [],
       "label": "Placeholder 5"
     },
-    "drop07_jolene": {
-      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_jolene.webp",
+    "contenders_jolene": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/contenders_jolene.webp",
       "media_type": "image",
       "ext": "webp",
       "bytes": 69618,
@@ -122,12 +122,12 @@
       "tier": "premium",
       "pov_ids": [],
       "tags": [
-        "drop07"
+        "contenders"
       ],
-      "label": "Drop07 Jolene"
+      "label": "Jolene"
     },
-    "drop07_aria": {
-      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_aria.webp",
+    "contenders_aria": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/contenders_aria.webp",
       "media_type": "image",
       "ext": "webp",
       "bytes": 96238,
@@ -136,12 +136,12 @@
       "tier": "premium",
       "pov_ids": [],
       "tags": [
-        "drop07"
+        "contenders"
       ],
-      "label": "Drop07 Aria"
+      "label": "Aria"
     },
-    "drop07_corinne": {
-      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_corinne.webp",
+    "contenders_corinne": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/contenders_corinne.webp",
       "media_type": "image",
       "ext": "webp",
       "bytes": 90018,
@@ -150,12 +150,12 @@
       "tier": "premium",
       "pov_ids": [],
       "tags": [
-        "drop07"
+        "contenders"
       ],
-      "label": "Drop07 Corinne"
+      "label": "Corinne"
     },
-    "drop07_eden_b": {
-      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/drop07_eden_b.webp",
+    "contenders_eden": {
+      "url": "https://raw.githubusercontent.com/fedeps3/phone-stories-meta/main/assets/contenders_eden.webp",
       "media_type": "image",
       "ext": "webp",
       "bytes": 60964,
@@ -164,9 +164,9 @@
       "tier": "premium",
       "pov_ids": [],
       "tags": [
-        "drop07"
+        "contenders"
       ],
-      "label": "Drop07 Eden B"
+      "label": "Eden"
     }
   }
 }
